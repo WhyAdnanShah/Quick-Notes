@@ -42,6 +42,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.quicknotes.data.NotesEntity
 import com.example.quicknotes.viewmodel.NotesViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 @Composable
@@ -146,6 +149,19 @@ fun EditNoteDialog(
                         .fillMaxHeight()
                         .fillMaxWidth(),
                     colors = textFieldColors
+                )
+            }
+            Row (
+                modifier = Modifier.fillMaxWidth().padding(24.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Bottom
+            ){
+                Text("Last Created : ", style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = SimpleDateFormat("MMM dd, yyyy - hh:mm a", Locale.getDefault())
+                        .format(Date(notesEntity.timestamp)),
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }
