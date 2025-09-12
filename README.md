@@ -6,11 +6,12 @@ Quick Notes is a modern, intuitive note-taking application built for Android.
 
 ### Features
 
-- 🔐 **Secure Authentication** — Google Sign-In via Firebase Auth
-- 📝 **Note Management** — Create, edit, and organize your notes effortlessly
-- 💾 **Offline Storage** — Room database for reliable local persistence
-- 🎨 **Clean Interface** — Beautiful Jetpack Compose UI with Material Design
-- ⚡ **Instant Updates** — Real-time note management
+-  **Secure Authentication** — Google Sign-In via Firebase Auth
+-  **Note Management** — Create, edit, and organize your notes effortlessly
+-  **Offline Storage** — Room database for reliable local persistence
+-  **Clean Interface** — Beautiful Jetpack Compose UI with Material Design
+-  **Instant Updates** — Real-time note management
+-  **UI** - Used Material 3 for UI
 
 ---
 
@@ -46,6 +47,20 @@ Quick Notes is a modern, intuitive note-taking application built for Android.
 2. Open in Android Studio
 3. Build and run on emulator or device
 4. Sign in with Google to start taking notes!
+
+##  Installation
+
+# Clone the repository
+git clone https://github.com/WhyAdnanShah/Quick-Notes.git
+
+# Open in Android Studio
+# - Select "Open an existing project"
+# - Navigate to the cloned directory
+
+# Build and run
+# - Wait for Gradle sync to complete
+# - Connect device/emulator
+# - Click Run → Run 'app'
 
 ---
 
