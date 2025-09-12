@@ -57,7 +57,7 @@ git clone https://github.com/WhyAdnanShah/Quick-Notes.git
  - Select "Open an existing project"
  - Navigate to the cloned directory
 
-# Build and run
+## Build and run
  - Wait for Gradle sync to complete
  - Connect device/emulator
  - Click Run → Run 'app'
