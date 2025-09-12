@@ -1,6 +1,6 @@
 📝 Quick Notes
 
-Quick Notes is a modern, intuitive note-taking application built for Android.
+## Quick Notes is a modern, intuitive note-taking application built for Android.
 
 ---
 
