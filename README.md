@@ -23,25 +23,22 @@ Quick Notes is a modern, intuitive note-taking application built for Android.
 - Coroutines for async operations
 
 ---
-
 ### 📸 Screenshots
 
 #### Authentication Flow
-| Login Screen                                         | Google Sign-In                                        |
-|------------------------------------------------------|-------------------------------------------------------|
-| <img src="ScreenShots/Login_screen.jpg" width="300"> | <img src="ScreenShots/google_signin.png" width="300"> |
+| Login Screen | Empty State |
+|--------------|-------------|
+| <img src="screenshots/Login_screen.jpg" width="300"> | <img src="screenshots/Empty_list.jpg" width="300"> |
 
 #### Notes Management
-| Empty Notes List                                   | Create New Note                                  |
-|----------------------------------------------------|--------------------------------------------------|
-| <img src="ScreenShots/Empty_list.jpg" width="300"> | <img src="ScreenShots/new_note.jpg" width="300"> |
+| Create New Note | Notes Dashboard |
+|-----------------|-----------------|
+| <img src="screenshots/new_note.jpg" width="300"> | <img src="screenshots/Notes_Screen.png" width="300"> |
 
 #### App Experience
-| Notes Screen                                         | Sign Out |
-|------------------------------------------------------|----------|
-| <img src="ScreenShots/Notes_Screen.png" width="300"> | <img src="ScreenShots/sign_out.png" width="300"> |
-
----
+| Settings & Sign Out |
+|---------------------|
+| <img src="screenshots/sign_out.png" width="300"> |
 
 ### 🚀 Getting Started
 
