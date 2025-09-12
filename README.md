@@ -62,14 +62,6 @@ git clone https://github.com/WhyAdnanShah/Quick-Notes.git
  - Connect device/emulator
  - Click Run → Run 'app'
 
----
-
-### Note
-
-This app was developed as part of the MyApps Android Developer Intern assignment, showcasing modern Android development practices with Jetpack Compose and Firebase integration.
-
----
-
 <div align="center">
 
 **Developed with ❤️ by Adnan Shah**
