@@ -53,14 +53,14 @@ Quick Notes is a modern, intuitive note-taking application built for Android.
 # Clone the repository
 git clone https://github.com/WhyAdnanShah/Quick-Notes.git
 
-# Open in Android Studio
-# - Select "Open an existing project"
-# - Navigate to the cloned directory
+ - Open in Android Studio
+ - Select "Open an existing project"
+ - Navigate to the cloned directory
 
 # Build and run
-# - Wait for Gradle sync to complete
-# - Connect device/emulator
-# - Click Run → Run 'app'
+ - Wait for Gradle sync to complete
+ - Connect device/emulator
+ - Click Run → Run 'app'
 
 ---
 
