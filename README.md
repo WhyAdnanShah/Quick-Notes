@@ -1,110 +1,66 @@
-Here's a concise, professional README:
+📝 Quick Notes
 
-```markdown
-# 📝 Quick Notes
+Quick Notes is a modern, intuitive note-taking application built for Android.
 
-A modern note-taking app built with Kotlin and Jetpack Compose.
+---
 
-## ✨ Features
+✨ Features
 
-- 🔐 Google Sign-In with Firebase Auth
-- 📝 Create, edit & delete notes
-- 💾 Local storage with Room DB
-- 🎨 Beautiful Jetpack Compose UI
-- 📱 Responsive design
+· 🔐 Secure Authentication — Google Sign-In via Firebase Auth
+· 📝 Note Management — Create, edit, and organize your notes effortlessly
+· 💾 Offline Storage — Room database for reliable local persistence
+· 🎨 Clean Interface — Beautiful Jetpack Compose UI with Material Design
+· ⚡ Instant Updates — Real-time note synchronization
 
-## 🚀 Quick Start
+---
 
-1. **Clone & Open**
-   ```bash
-   git clone https://github.com/WhyAdnanShah/Quick-Notes.git
-   # Open in Android Studio
-```
+📱 Built With
 
-1. Configure Firebase (Optional)
-   · Get google-services.json from Firebase Console
-   · Place in app/ directory
-2. Run the app
-   · Build project in Android Studio
-   · Run on device/emulator
-
-🛠️ Tech Stack
-
-· Kotlin
-· Jetpack Compose
-· Room Database
+· Kotlin + Jetpack Compose
 · Firebase Authentication
+· Room Database
 · MVVM Architecture
+· Coroutines for async operations
+
+---
 
 📸 Screenshots
 
-Login Notes Edit
-screenshots/login.png screenshots/notes.png screenshots/edit.png
+Authentication
 
-📞 Contact
 
-Adnan Shah - GitHub
+screenshots/login.png screenshots/google_signin.png
 
----
+Notes Management
 
-⭐ Star this repo if you like it!
 
-```
+screenshots/notes_list.png screenshots/edit_note.png
 
-This version is:
-- Clean and professional
-- Easy to read quickly
-- Includes all essential information
-- Visually appealing with badges and emojis
-- Perfect for internship submission
+Dark Mode
 
-To add it:
-```bash
-echo '# 📝 Quick Notes
-
-A modern note-taking app built with Kotlin and Jetpack Compose.
-
-## ✨ Features
-
-- 🔐 Google Sign-In with Firebase Auth
-- 📝 Create, edit & delete notes
-- 💾 Local storage with Room DB
-- 🎨 Beautiful Jetpack Compose UI
-- 📱 Responsive design
-
-## 🚀 Quick Start
-
-1. **Clone & Open**
-   \`\`\`bash
-   git clone https://github.com/WhyAdnanShah/Quick-Notes.git
-   # Open in Android Studio
-   \`\`\`
-
-2. **Configure Firebase** (Optional)
-   - Get \`google-services.json\` from Firebase Console
-   - Place in \`app/\` directory
-
-3. **Run the app**
-   - Build project in Android Studio
-   - Run on device/emulator
-
-## 🛠️ Tech Stack
-
-- Kotlin
-- Jetpack Compose
-- Room Database
-- Firebase Authentication
-- MVVM Architecture
-
-## 📞 Contact
-
-Adnan Shah - [GitHub](https://github.com/WhyAdnanShah)
+<img src="screenshots/dark_mode.png" width="300"/>
 
 ---
 
-⭐ **Star this repo if you like it!**' > README.md
+🚀 Getting Started
 
-git add README.md
-git commit -m "Add concise README"
-git push origin main
-```
+1. Clone the repository
+2. Open in Android Studio
+3. Build and run on emulator or device
+4. Sign in with Google to start taking notes!
+
+---
+
+📌 Note
+
+This app was developed as part of the MyApps Android Developer Intern assignment, showcasing modern Android development practices with Jetpack Compose and Firebase integration.
+
+---
+
+<div align="center">
+
+Developed with ❤️ by Adnan Shah
+
+</div>
+
+This format follows the clean, visually appealing style you liked from MindNest while highlighting your Quick Notes app's specific features and technologies. The emoji-based section headers and screenshot placeholders make it engaging and professional.
