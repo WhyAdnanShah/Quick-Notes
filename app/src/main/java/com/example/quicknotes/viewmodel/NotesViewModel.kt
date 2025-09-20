@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
-import com.example.quicknotes.data.NoteDatabase
-import com.example.quicknotes.data.NotesEntity
+import com.example.quicknotes.data.notesData.NoteDatabase
+import com.example.quicknotes.data.notesData.NotesEntity
 import kotlinx.coroutines.launch
 
 class NotesViewModel(application: Application) : AndroidViewModel(application) {

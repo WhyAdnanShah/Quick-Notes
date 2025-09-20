@@ -12,6 +12,7 @@ import com.example.quicknotes.UI.LoginScreen
 import com.example.quicknotes.UI.notes.NotesScreen
 import com.example.quicknotes.viewmodel.NotesViewModelFactory
 import com.example.quicknotes.ui.theme.QuickNotesTheme
+import com.example.quicknotes.viewmodel.TodoViewModelFactory
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -45,8 +46,12 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("notes") {
                         NotesScreen(
+                            notesScreenModel = viewModel(),
                             notesViewModel = viewModel(
                                 factory = NotesViewModelFactory(application)
+                            ),
+                            todoViewModel = viewModel(
+                                factory = TodoViewModelFactory(application)
                             ),
                             onSignOut = {
                                 auth.signOut()

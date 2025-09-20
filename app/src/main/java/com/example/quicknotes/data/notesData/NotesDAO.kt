@@ -1,4 +1,4 @@
-package com.example.quicknotes.data
+package com.example.quicknotes.data.notesData
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

@@ -1,6 +1,7 @@
 package com.example.quicknotes.UI.lists
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,15 +14,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +33,10 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,12 +52,21 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.quicknotes.data.listsData.TodoEntity
 import com.example.quicknotes.viewmodel.TodoViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TodoDialog(onDismiss: () -> Unit, todoViewModel: TodoViewModel) {
+fun EditTodoDialog(
+    onDismiss: () -> Unit,
+    todoEntity: TodoEntity,
+    todoViewModel: TodoViewModel
+) {
     val context = LocalContext.current
-    var title by remember { mutableStateOf("") }
-    var items by remember { mutableStateOf(listOf("")) }
+    var title by remember { mutableStateOf(todoEntity.title) }
+    val listItems by todoViewModel.getListItems(todoEntity.id).collectAsState(initial = emptyList())
+    var items by remember { mutableStateOf(listItems.map { it.content }) }
+
+    LaunchedEffect(listItems) {
+        items = if (listItems.isEmpty()) listOf("")
+        else listItems.map { it.content } + ""
+    }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -71,59 +87,68 @@ fun TodoDialog(onDismiss: () -> Unit, todoViewModel: TodoViewModel) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    IconButton(
-                        onClick = onDismiss
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Close"
-                        )
+                    IconButton(onClick = onDismiss) {
+                        Icon(Icons.Default.Close, "Close")
                     }
+                    Row(Modifier.wrapContentSize()) {
+                        Button(
+                            modifier = Modifier
+                                .wrapContentSize(),
+                            onClick = {
+                                todoViewModel.delete(todoEntity)
+                                onDismiss()
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+                            shape = RoundedCornerShape(20.dp, 5.dp, 5.dp, 20.dp)
+                        )
+                        {
+                            Image(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete"
+                            )
+                        }
+                        Spacer(Modifier.width(5.dp))
+                        Button(
+                            onClick = {
+                                val filteredItems = items.filter { it.isNotEmpty() }
+                                if (title.isNotEmpty() && filteredItems.isNotEmpty()) {
+                                    val updatedTodo = todoEntity.copy(title = title)
+                                    todoViewModel.update(updatedTodo)
 
-                    Button(
-                        onClick = {
-                            val filteredItems = items.filter { it.isNotEmpty() }
-                            val newList = TodoEntity(title = title)
-                            if (title.isNotEmpty() && filteredItems.isNotEmpty()) {
-                                todoViewModel.add(newList){generatedId ->
-                                    filteredItems.forEach { item ->
-                                        todoViewModel.insertItem(generatedId, item)
+                                    listItems.forEach { item ->
+                                        todoViewModel.deleteItem(item)
+                                    }
+
+                                    filteredItems.forEach { content ->
+                                        todoViewModel.insertItem(todoEntity.id, content)
                                     }
                                     onDismiss()
+
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        if (title.isEmpty()) "List title cannot be empty"
+                                        else "Add at least one item",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    if (title.isEmpty() && filteredItems.isNotEmpty()) "List title cannot be empty"
-                                    else if (title.isNotEmpty() && filteredItems.isEmpty()) "Title cannot be empty" else "Add at least one item",
-                                    Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
-                        enabled = title.isNotEmpty() && items.any { it.isNotEmpty() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = "Save"
-                        )
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+                            enabled = title.isNotEmpty() && items.any { it.isNotEmpty() },
+                            shape = RoundedCornerShape(5.dp, 20.dp, 20.dp, 5.dp)
+                        ) {
+                            Icon(Icons.Default.Check, "Save")
+                        }
                     }
+
                 }
 
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    placeholder = {
-                        Text(
-                            text = "List Title",
-                            style = MaterialTheme.typography.headlineSmall
-                        )
-                    },
-                    textStyle = MaterialTheme.typography.headlineSmall
-                        .copy(fontWeight = FontWeight.Bold),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
+                    placeholder = { Text("List Title", style = MaterialTheme.typography.headlineSmall) },
+                    textStyle = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Transparent,
                         unfocusedBorderColor = Color.Transparent,
@@ -131,13 +156,9 @@ fun TodoDialog(onDismiss: () -> Unit, todoViewModel: TodoViewModel) {
                     )
                 )
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
+                LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     items(items.size) { index ->
-                        TodoListItemInput(
+                        TodoListItemUpdate(
                             item = items[index],
                             onItemChange = { newValue ->
                                 items = items.toMutableList().apply {
@@ -161,21 +182,14 @@ fun TodoDialog(onDismiss: () -> Unit, todoViewModel: TodoViewModel) {
 
                 if (items.all { it.isNotEmpty() }) {
                     Button(
-                        onClick = {
-                            items = items + ""
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp),
+                        onClick = { items = items + "" },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.secondaryContainer,
                             contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add item"
-                        )
+                        Icon(Icons.Default.Add, "Add item")
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Add Item")
                     }
@@ -184,9 +198,8 @@ fun TodoDialog(onDismiss: () -> Unit, todoViewModel: TodoViewModel) {
         }
     }
 }
-
 @Composable
-fun TodoListItemInput(
+fun TodoListItemUpdate(
     item: String,
     onItemChange: (String) -> Unit,
     onAddNew: () -> Unit,

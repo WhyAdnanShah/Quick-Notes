@@ -1,4 +1,4 @@
-package com.example.quicknotes.data
+package com.example.quicknotes.data.notesData
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

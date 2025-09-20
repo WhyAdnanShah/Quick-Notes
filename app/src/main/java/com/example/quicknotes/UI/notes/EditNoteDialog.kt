@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -35,12 +36,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.quicknotes.data.NotesEntity
+import com.example.quicknotes.data.notesData.NotesEntity
 import com.example.quicknotes.viewmodel.NotesViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -53,7 +54,6 @@ fun EditNoteDialog(
     notesEntity: NotesEntity,
     notesViewModel: NotesViewModel
 ) {
-    val context = LocalContext.current
     var title by remember { mutableStateOf(notesEntity.title) }
     var description by remember { mutableStateOf(notesEntity.description) }
     val textFieldColors = OutlinedTextFieldDefaults.colors(
@@ -96,7 +96,8 @@ fun EditNoteDialog(
                                 notesViewModel.delete(notesEntity)
                                 onDismiss()
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+                            shape = RoundedCornerShape(20.dp, 5.dp, 5.dp, 20.dp)
                         )
                         {
                             Image(
@@ -104,7 +105,7 @@ fun EditNoteDialog(
                                 contentDescription = "Delete"
                             )
                         }
-                        Spacer(Modifier.width(10.dp))
+                        Spacer(Modifier.width(5.dp))
                         Button(
                             modifier = Modifier
                                 .wrapContentSize(),
@@ -116,7 +117,8 @@ fun EditNoteDialog(
                                 notesViewModel.update(updateNote)
                                 onDismiss()
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+                            shape = RoundedCornerShape(5.dp, 20.dp, 20.dp, 5.dp)
                         )
                         {
                             Image(

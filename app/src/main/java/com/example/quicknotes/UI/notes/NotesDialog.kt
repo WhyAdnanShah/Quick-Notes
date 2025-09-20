@@ -39,7 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.quicknotes.data.NotesEntity
+import com.example.quicknotes.data.notesData.NotesEntity
 import com.example.quicknotes.viewmodel.NotesViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
