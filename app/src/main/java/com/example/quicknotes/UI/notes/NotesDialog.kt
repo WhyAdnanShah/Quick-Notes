@@ -28,8 +28,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,10 +42,14 @@ import com.example.quicknotes.viewmodel.NotesViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun NotesDialog(onDismiss: () -> Unit, notesViewModel: NotesViewModel) {
+fun NotesDialog(
+    onDismiss: () -> Unit,
+    notesViewModel: NotesViewModel,
+    notesScreenModel: NotesScreenModel
+) {
     val context = LocalContext.current
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    var title by notesScreenModel.notesTitle
+    var description by notesScreenModel.notesDescription
     val textFieldColors = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = Color.Transparent,
         unfocusedBorderColor = Color.Transparent,
@@ -91,6 +93,8 @@ fun NotesDialog(onDismiss: () -> Unit, notesViewModel: NotesViewModel) {
                             if ((title.isNotEmpty() && description.isNotEmpty()) || (title.isNotEmpty() || description.isNotEmpty())) {
                                 notesViewModel.addNote(newNote)
                                 onDismiss()
+                                title = ""
+                                description = ""
                             }
                             else{
                                 Toast.makeText(context, "Empty Note Discarded", Toast.LENGTH_SHORT).show()

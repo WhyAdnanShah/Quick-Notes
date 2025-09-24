@@ -1,7 +1,11 @@
 package com.example.quicknotes.UI.lists
 
+import android.annotation.SuppressLint
 import android.widget.Toast
-import androidx.compose.foundation.Image
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -34,15 +39,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -51,7 +55,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.quicknotes.data.listsData.TodoEntity
 import com.example.quicknotes.viewmodel.TodoViewModel
+import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
+@SuppressLint("UnusedContentLambdaTargetStateParameter")
 @Composable
 fun EditTodoDialog(
     onDismiss: () -> Unit,
@@ -62,6 +71,23 @@ fun EditTodoDialog(
     var title by remember { mutableStateOf(todoEntity.title) }
     val listItems by todoViewModel.getListItems(todoEntity.id).collectAsState(initial = emptyList())
     var items by remember { mutableStateOf(listItems.map { it.content }) }
+    var deleteButton by remember { mutableStateOf(false) }
+    val transition = updateTransition(targetState = deleteButton, label = "deleteButtonTransition")
+
+    val buttonColor by transition.animateColor(
+        label = "buttonColor",
+        transitionSpec = { tween(durationMillis = 100) }
+    ) { isDelete ->
+        if (isDelete) Color.Red else Color.LightGray
+    }
+
+    val buttonWidth by transition.animateDp(
+        label = "buttonWidth",
+        transitionSpec = { tween(durationMillis = 300) }
+    ) { isDelete ->
+        if (isDelete) 130.dp else 70.dp
+    }
+
 
     LaunchedEffect(listItems) {
         items = if (listItems.isEmpty()) listOf("")
@@ -77,7 +103,7 @@ fun EditTodoDialog(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Top
             ) {
                 Row(
@@ -93,22 +119,48 @@ fun EditTodoDialog(
                     Row(Modifier.wrapContentSize()) {
                         Button(
                             modifier = Modifier
-                                .wrapContentSize(),
+                                .width(buttonWidth)
+                                .height(40.dp),
                             onClick = {
-                                todoViewModel.delete(todoEntity)
-                                onDismiss()
+                                if (deleteButton) {
+                                    todoViewModel.delete(todoEntity)
+                                    onDismiss()
+                                } else {
+                                    deleteButton = true
+                                }
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+                            colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
                             shape = RoundedCornerShape(20.dp, 5.dp, 5.dp, 20.dp)
-                        )
-                        {
-                            Image(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete"
-                            )
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Delete",
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .alpha(if (deleteButton) 0f else 1f)
+                                )
+
+                                if (deleteButton) {
+                                    Text(
+                                        text = "Delete?",
+                                        color = Color.White,
+                                        modifier = Modifier.padding(horizontal = 8.dp)
+                                    )
+                                }
+                            }
+                        }
+                        LaunchedEffect(deleteButton) {
+                            if (deleteButton) {
+                                delay(2500)
+                                deleteButton = false
+                            }
                         }
                         Spacer(Modifier.width(5.dp))
-                        Button(
+                        Button(modifier = Modifier.height(40.dp).width(70.dp),
                             onClick = {
                                 val filteredItems = items.filter { it.isNotEmpty() }
                                 if (title.isNotEmpty() && filteredItems.isNotEmpty()) {
@@ -123,8 +175,8 @@ fun EditTodoDialog(
                                         todoViewModel.insertItem(todoEntity.id, content)
                                     }
                                     onDismiss()
-
-                                } else {
+                                }
+                                else {
                                     Toast.makeText(
                                         context,
                                         if (title.isEmpty()) "List title cannot be empty"
@@ -156,7 +208,7 @@ fun EditTodoDialog(
                     )
                 )
 
-                LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                LazyColumn(modifier = Modifier.wrapContentHeight()) {
                     items(items.size) { index ->
                         TodoListItemUpdate(
                             item = items[index],
@@ -183,17 +235,26 @@ fun EditTodoDialog(
                 if (items.all { it.isNotEmpty() }) {
                     Button(
                         onClick = { items = items + "" },
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+                        shape = RoundedCornerShape(20.dp)
                     ) {
                         Icon(Icons.Default.Add, "Add item")
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Add Item")
                     }
                 }
+            }
+            Row (
+                modifier = Modifier.fillMaxWidth().padding(24.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Bottom
+            ){
+                Text("Last Created : ", style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = SimpleDateFormat("MMM dd, yyyy - hh:mm a", Locale.getDefault())
+                        .format(Date(todoEntity.timestamp)),
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
     }
@@ -215,10 +276,11 @@ fun TodoListItemUpdate(
         Box(
             modifier = Modifier
                 .size(24.dp)
-                .border(1.dp, Color.Gray, CircleShape)
                 .padding(4.dp)
-        )
+                .border(1.dp,MaterialTheme.colorScheme.primary, CircleShape),
+        ){
 
+        }
         Spacer(modifier = Modifier.width(12.dp))
 
         OutlinedTextField(
@@ -252,4 +314,5 @@ fun TodoListItemUpdate(
             }
         }
     }
+
 }

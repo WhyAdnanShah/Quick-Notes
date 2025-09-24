@@ -32,6 +32,7 @@ import com.example.quicknotes.data.listsData.TodoEntity
 import com.example.quicknotes.data.notesData.NotesEntity
 import com.example.quicknotes.viewmodel.NotesViewModel
 import com.example.quicknotes.viewmodel.TodoViewModel
+
 @Composable
 fun NotesGridView(
     notes: List<NotesEntity>,
@@ -74,7 +75,7 @@ fun NotesGridView(
 
 @Composable
 fun NotesCard(notesEntity: NotesEntity, notesViewModel: NotesViewModel) {
-    var isEditNote by remember { mutableStateOf(false) }
+    var isEditNote by rememberSaveable { mutableStateOf(false) }
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
@@ -122,7 +123,8 @@ fun TodoCard(todoEntity: TodoEntity, todoViewModel: TodoViewModel) {
             listItems.forEach { item ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Checkbox(
                         checked = item.isChecked,
@@ -131,8 +133,8 @@ fun TodoCard(todoEntity: TodoEntity, todoViewModel: TodoViewModel) {
                         }
                     )
                     Text(
-                        text = item.content,
-                        modifier = Modifier.padding(start = 8.dp)
+                        text = item.content.take(50) + if (item.content.length > 50) "..." else "",
+                        modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
             }

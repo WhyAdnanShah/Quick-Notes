@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,15 +43,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.quicknotes.UI.notes.NotesScreenModel
 import com.example.quicknotes.data.listsData.TodoEntity
 import com.example.quicknotes.viewmodel.TodoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TodoDialog(onDismiss: () -> Unit, todoViewModel: TodoViewModel) {
+fun TodoDialog(
+    onDismiss: () -> Unit,
+    todoViewModel: TodoViewModel,
+    notesScreenModel: NotesScreenModel
+) {
     val context = LocalContext.current
-    var title by remember { mutableStateOf("") }
-    var items by remember { mutableStateOf(listOf("")) }
+    var title by rememberSaveable { mutableStateOf("") }
+    var items by rememberSaveable { mutableStateOf(listOf("")) }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -158,7 +164,6 @@ fun TodoDialog(onDismiss: () -> Unit, todoViewModel: TodoViewModel) {
                         )
                     }
                 }
-
                 if (items.all { it.isNotEmpty() }) {
                     Button(
                         onClick = {

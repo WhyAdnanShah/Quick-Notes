@@ -55,13 +55,21 @@ import com.example.quicknotes.UI.lists.TodoDialog
 import com.example.quicknotes.viewmodel.NotesViewModel
 import com.example.quicknotes.viewmodel.TodoViewModel
 
-class NotesScreenModel : ViewModel() {
+class NotesScreenModel: ViewModel() {
     private val _isNotesDialog = mutableStateOf(false)
     val isNotesDialog: MutableState<Boolean> = _isNotesDialog
     private val _isListsDialog = mutableStateOf(false)
     val isListsDialog: MutableState<Boolean> = _isListsDialog
     private val _isSettings = mutableStateOf(false)
     val isSettings: MutableState<Boolean> = _isSettings
+    private val _notesTitle = mutableStateOf("")
+    val notesTitle: MutableState<String> = _notesTitle
+    private val _notesDescription = mutableStateOf("")
+    val notesDescription: MutableState<String> = _notesDescription
+    private val _listsTitle = mutableStateOf("")
+    val listsTitle: MutableState<String> = _listsTitle
+    private val _listsItems = mutableStateOf(listOf(""))
+    val listsItems: MutableState<List<String>> = _listsItems
 }
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
@@ -78,8 +86,8 @@ fun NotesScreen(notesScreenModel: NotesScreenModel, notesViewModel: NotesViewMod
         expanded = false
     }
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.no_notes))
-    val notes by notesViewModel.allNotes.collectAsState(initial = emptyList())
-    val lists by todoViewModel.allLists.collectAsState(initial = emptyList())
+    val allNotes by notesViewModel.allNotes.collectAsState(initial = emptyList())
+    val allLists by todoViewModel.allLists.collectAsState(initial = emptyList())
     Scaffold(
         topBar = {
             TopAppBar(
@@ -150,7 +158,7 @@ fun NotesScreen(notesScreenModel: NotesScreenModel, notesViewModel: NotesViewMod
             }
         }
     ){paddingValues ->
-        if (notes.isEmpty() && lists.isEmpty())
+        if (allNotes.isEmpty() && allLists.isEmpty())
             Column(
                 Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -162,14 +170,14 @@ fun NotesScreen(notesScreenModel: NotesScreenModel, notesViewModel: NotesViewMod
                 Text(text = "Add notes by tapping '+' button")
             }
         else{
-            NotesGridView(notes = notes, lists = lists, notesViewModel = notesViewModel, todoViewModel = todoViewModel, paddingValues)
+            NotesGridView(notes = allNotes, lists = allLists, notesViewModel = notesViewModel, todoViewModel = todoViewModel, paddingValues)
         }
     }
     if (isListsDialog){
-        TodoDialog(onDismiss = { isListsDialog = false }, todoViewModel = todoViewModel)
+        TodoDialog(onDismiss = { isListsDialog = false }, todoViewModel = todoViewModel, notesScreenModel = notesScreenModel)
     }
     if (isNotesDialog){
-        NotesDialog(onDismiss = { isNotesDialog = false }, notesViewModel = notesViewModel)
+        NotesDialog(onDismiss = { isNotesDialog = false }, notesViewModel = notesViewModel, notesScreenModel = notesScreenModel)
     }
     if (isSettings){
         SettingsDialog(onDismiss = { isSettings = false }, onSignOut = onSignOut)
